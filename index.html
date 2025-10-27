@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dal Tokki Cafe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #fff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #000;
+            --text-secondary: #666;
+            --border-color: #ddd;
+            --card-bg: #fff;
+            --navbar-bg: #000;
+            --navbar-text: #fff;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #000;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #fff;
+            --text-secondary: #aaa;
+            --border-color: #333;
+            --card-bg: #1a1a1a;
+            --navbar-bg: #000;
+            --navbar-text: #fff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--navbar-bg) !important;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .navbar-brand {
+            color: var(--navbar-text) !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--navbar-text) !important;
+            font-weight: 500;
+            margin: 0 1rem;
+            transition: opacity 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--navbar-text);
+            color: var(--navbar-text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-left: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--navbar-text);
+            color: var(--navbar-bg);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--navbar-bg);
+            color: var(--navbar-text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 100px 0 80px;
+        }
+
+        .hero-image-left {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .btn-primary {
+            background: var(--navbar-text);
+            color: var(--navbar-bg);
+            border: 2px solid var(--navbar-text);
+            padding: 12px 35px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: var(--navbar-bg);
+            color: var(--navbar-text);
+            border-color: var(--navbar-text);
+        }
+
+        .btn-outline-light {
+            border: 2px solid var(--navbar-text);
+            color: var(--navbar-text);
+            padding: 12px 35px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+            background: transparent;
+        }
+
+        .btn-outline-light:hover {
+            background: var(--navbar-text);
+            color: var(--navbar-bg);
+        }
+
+        /* Section Styles */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* About Section */
+        #about {
+            font-style: italic;
+            padding: 80px 0;
+            background: var(--bg-primary);
+        }
+        
+        .about-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Menu Section */
+        #menu {
+            background: var(--bg-secondary);
+            padding: 80px 0;
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.3s;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .menu-card h4 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .menu-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item h6 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .menu-item .price {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .menu-item small {
+            color: var(--text-secondary);
+        }
+
+        /* App Section with Phone Mockup */
+        #app {
+            background: var(--navbar-bg);
+            color: var(--navbar-text);
+            padding: 80px 0;
+        }
+
+        .phone-mockup {
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+            height: 700px;
+            margin: 0 auto;
+        }
+
+        .phone-frame {
+            background: #1a1a1a;
+            border-radius: 40px;
+
+            padding: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 8px solid #333;
+        }
+
+        .phone-notch {
+            background: #000;
+            height: 20px;
+            border-radius: 0 0 20px 20px;
+            margin: -15px auto 10px;
+            width: 150px;
+        }
+
+        .phone-screen {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            height: 700px;
+        }
+
+        .slideshow-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #fff;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .app-features {
+            margin-top: 2rem;
+        }
+
+        .app-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .app-feature i {
+            font-size: 2rem;
+            margin-right: 1rem;
+            width: 50px;
+            text-align: center;
+        }
+
+        /* Contact Section */
+        #contact {
+            padding: 80px 0;
+            background: var(--bg-primary);
+        }
+
+        .contact-card {
+            text-align: center;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            transition: all 0.3s;
+            background: var(--card-bg);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .contact-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .contact-card h5 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .contact-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navbar-bg);
+            color: var(--navbar-text);
+            padding: 40px 0 20px;
+        }
+
+        footer a {
+            color: var(--navbar-text);
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        footer a:hover {
+            opacity: 1;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--navbar-text);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--navbar-text);
+            color: var(--navbar-bg);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .phone-screen {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <img src="dal tokki cafe.jpg" alt="Dal Tokki Logo" class="logo-img">
+                <span>Chrysxava's Dal Tokki Cafe</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#menu">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#app">App</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h1 class="hero-title">Welcome to Chrysxava's Dal Tokki Cafe</h1>
+                    <p class="hero-subtitle">Experience authentic Korean culture with our premium blends and traditional recipes</p>
+                    <div>
+                        <a href="#menu" class="btn btn-primary me-3">View Menu</a>
+                        <a href="#app" class="btn btn-outline-light">Get App</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="interior.jpg" alt="Dal Tokki Cafe Hero" class="hero-image-left">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Our Story</h2>
+            <p class="section-subtitle">Inspired by the legendary Moon Rabbit Tokki</p>
+            <div class="row align-items-center mt-5">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="about.jpg" alt="Dal Tokki Cafe" class="about-img">
+                </div>
+                <div class="col-lg-6">
+                    <p class="lead">Once upon a time, in a peaceful forest, there lived a rabbit named Tokki. One night, the Jade Emperor wanted to find a creature with a big heart. Tokki's pure kindness earned her a place on the moon, where she helps others by making rice cakes.</p>
+                    <p style="color: var(--text-secondary);">Now, whenever people look at the moon, they see Tokki and remember her kindness, teaching everyone that even the smallest heart can shine the brightest. This spirit of warmth and generosity inspires everything we do at Dal Tokki Cafe.</p>
+                </div>
+            </div>
+            
+            <!-- Categories -->
+            <div class="row mt-5 pt-5">
+                <div class="col-md-4 mb-4">
+                    <div class="text-center p-4" style="border: 2px solid var(--text-primary); border-radius: 15px; transition: all 0.3s;">
+                        <i class="fas fa-mug-hot" style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-primary);"></i>
+                        <h4 style="font-weight: 700;">Beverages</h4>
+                        <p style="color: var(--text-secondary); margin: 0;">Premium coffee and refreshing non-coffee drinks</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="text-center p-4" style="border: 2px solid var(--text-primary); border-radius: 15px; transition: all 0.3s;">
+                        <i class="fas fa-bowl-rice" style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-primary);"></i>
+                        <h4 style="font-weight: 700;">Korean Food</h4>
+                        <p style="color: var(--text-secondary); margin: 0;">Authentic Korean dishes and party trays</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="text-center p-4" style="border: 2px solid var(--text-primary); border-radius: 15px; transition: all 0.3s;">
+                        <i class="fas fa-plate-wheat" style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-primary);"></i>
+                        <h4 style="font-weight: 700;">Filipino Food</h4>
+                        <p style="color: var(--text-secondary); margin: 0;">Classic Pinoy favorites and comfort meals</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu">
+        <div class="container">
+            <h2 class="section-title">Our Menu</h2>
+            <p class="section-subtitle">Discover our delicious selection</p>
+            
+            <!-- Operating Hours -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div style="background: var(--navbar-bg); color: var(--navbar-text); padding: 2rem; border-radius: 15px; text-align: center;">
+                        <i class="fas fa-clock" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <h3 style="font-weight: 700; margin-bottom: 1rem;">OPERATING HOURS</h3>
+                <div style="font-size: 1.2rem;">
+                    <p style="margin: 0.5rem 0;"><strong>Monday:</strong> CLOSED</p>
+                    <p style="margin: 0.5rem 0;"><strong>Tuesday - Sunday:</strong> 3:00 PM - 10:00 PM</p>
+                </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <!-- Korean Rice Meals -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="menu-card">
+                        <h4><i class="fas fa-bowl-food"></i> Korean Rice Meals</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>KM2 Chicken Pops w/ Rice</h6>
+                                    <small class="text-muted">Crispy chicken pops served with rice</small>
+                                </div>
+                                <span class="price">₱159</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>KM3 Bulgogi Double Burger Steak</h6>
+                                    <small class="text-muted">Double bulgogi burger steak with rice</small>
+                                </div>
+                                <span class="price">₱169</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>KM4 Bilbao</h6>
+                                    <small class="text-muted">Traditional Korean bilbao dish</small>
+                                </div>
+                                <span class="price">₱189</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sandwich and Burger -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="menu-card">
+                        <h4><i class="fas fa-burger"></i> Sandwich & Burger</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>SB4 Bulgogi Burger</h6>
+                                    <small class="text-muted">Korean-style bulgogi burger</small>
+                                </div>
+                                <span class="price">₱139</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>SB5 Crispy Chicken Sandwich</h6>
+                                    <small class="text-muted">Crispy fried chicken sandwich</small>
+                                </div>
+                                <span class="price">₱159</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>SB6 Spicy Crispy Chicken Sandwich</h6>
+                                    <small class="text-muted">Spicy fried chicken sandwich</small>
+                                </div>
+                                <span class="price">₱169</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Korean Party Trays -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="menu-card">
+                        <h4><i class="fas fa-utensils"></i> Korean Party Trays</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>KF1 Samgyeop Rolls</h6>
+                                    <small class="text-muted">Perfect for sharing</small>
+                                </div>
+                                <span class="price">₱629</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>KF2 Kimbap</h6>
+                                    <small class="text-muted">Korean rice rolls</small>
+                                </div>
+                                <span class="price">₱489</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>KF4 Chicken Pops</h6>
+                                    <small class="text-muted">Party-sized chicken pops</small>
+                                </div>
+                                <span class="price">₱589</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coffee -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="menu-card">
+                        <h4><i class="fas fa-mug-hot"></i> Coffee</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>C4 Spanish Latte 12oz</h6>
+                                    <small class="text-muted">Premium Spanish latte</small>
+                                </div>
+                                <span class="price">₱105</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>C7 Café Mocha HOT 12oz</h6>
+                                    <small class="text-muted">Hot café mocha</small>
+                                </div>
+                                <span class="price">₱105</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>C13 Biscoff Latté ICED 22oz</h6>
+                                    <small class="text-muted">Iced biscoff latte</small>
+                                </div>
+                                <span class="price">₱135</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Non-Coffee -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="menu-card">
+                        <h4><i class="fas fa-glass-water"></i> Non-Coffee</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>NC3 Milky Strawberry 12oz ICED</h6>
+                                    <small class="text-muted">Refreshing strawberry drink</small>
+                                </div>
+                                <span class="price">₱110</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>NC4 Milky Blueberry 12oz ICED</h6>
+                                    <small class="text-muted">Refreshing blueberry drink</small>
+                                </div>
+                                <span class="price">₱110</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>NC8 Nutella Ala Mode 12oz ICED</h6>
+                                    <small class="text-muted">Iced nutella ala mode</small>
+                                </div>
+                                <span class="price">₱135</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pinoy Rice Meal -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="menu-card">
+                        <h4><i class="fas fa-drumstick-bite"></i> Pinoy Rice Meal</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>PR2 Cheesy Hungarian Sausage w/ Rice</h6>
+                                    <small class="text-muted">Cheesy Hungarian with rice</small>
+                                </div>
+                                <span class="price">₱89</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>PR5 Lechon Kawali Sinigang</h6>
+                                    <small class="text-muted">Crispy pork belly in sinigang</small>
+                                </div>
+                                <span class="price">₱179</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>PR6 Lechon Kawali Kare-Kare</h6>
+                                    <small class="text-muted">Crispy pork belly in kare-kare</small>
+                                </div>
+                                <span class="price">₱179</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Salad Rolls -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="menu-card">
+                        <h4><i class="fas fa-leaf"></i> Salad Rolls</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>R1 Samgyeop Roll</h6>
+                                    <small class="text-muted">Korean pork belly roll</small>
+                                </div>
+                                <span class="price">₱129</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>R3 Bulgogi Kimbap</h6>
+                                    <small class="text-muted">Bulgogi rice roll</small>
+                                </div>
+                                <span class="price">₱169</span>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6>S1 Kani Salad</h6>
+                                    <small class="text-muted">Fresh kani salad</small>
+                                </div>
+                                <span class="price">₱169</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Section with Phone Mockup -->
+    <section id="app">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h2 class="section-title" style="text-align: left; color: #fff;">Get the Dal Tokki App</h2>
+                    <p class="lead mb-4">Download our mobile app for exclusive deals, easy ordering, and loyalty rewards!</p>
+                    
+                    <div class="app-features">
+                        <div class="app-feature">
+                            <i class="fas fa-mobile-alt"></i>
+                            <div>
+                                <h6 style="margin-bottom: 0.25rem;">Easy Mobile Ordering</h6>
+                                <small style="opacity: 0.7;">Order ahead and skip the line</small>
+                            </div>
+                        </div>
+                        <div class="app-feature">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <h6 style="margin-bottom: 0.25rem;">Loyalty Rewards</h6>
+                                <small style="opacity: 0.7;">Earn points with every purchase</small>
+                            </div>
+    </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="app-release.apk" download="DAL_TOKKI_CAFE.apk" class="btn btn-primary me-3 mb-2" id="downloadAPKBtn">
+                            <i class="fab fa-android"></i> Download Now
+                        </a>
+                        <a href="#" class="btn btn-outline-light mb-2" onclick="event.preventDefault(); alert('iOS version coming soon!');">
+                            <i class="fab fa-apple"></i> Coming Soon
+                        </a>
+                    </div>
+                    
+                    <div style="margin-top: 1rem;">
+                        <p style="font-size: 0.9rem; color: #cccccc;">
+                            <i class="fas fa-info-circle"></i> Direct APK download for Android devices
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="phone-mockup">
+                        <div class="phone-frame">
+                            <div class="phone-notch"></div>
+                            <div class="phone-screen">
+                                <div class="slideshow-container">
+                                <div class="slide active">
+                                        <img src="one.jpg" alt="App Screen 1">
+                                    </div>
+                                    <div class="slide">
+                                        <img src="two.jpg" alt="App Screen 2">
+                                    </div>
+                                    <div class="slide">
+                                        <img src="3.jpg" alt="App Screen 3">
+                                    </div>
+                                    <div class="slide">
+                                        <img src="4.jpg" alt="App Screen 4">
+                                    </div>
+                                    <div class="slide-dots">
+                                        <span class="dot active" onclick="currentSlide(0)"></span>
+                                        <span class="dot" onclick="currentSlide(1)"></span>
+                                        <span class="dot" onclick="currentSlide(2)"></span>
+                                        <span class="dot" onclick="currentSlide(3)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Visit us or reach out anytime</p>
+            <div class="row mt-5">
+                <div class="col-lg-4 mb-4">
+                    <div class="contact-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h5>Address</h5>
+                        <p>BLk Lot 19, Tanguile St., Phase 1, Dela Costa Homes V, Burgos, <br>Montalban, Rizal
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="contact-card">
+                        <i class="fas fa-phone"></i>
+                        <h5>Phone</h5>
+                        <p>09685266601</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h5>Email</h5>
+                        <p>info@daltokki.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 style="font-size: 1.3rem; margin-bottom: 1rem;"><i class="fas fa-store"></i> Dal Tokki Cafe</h5>
+                    <p style="opacity: 0.7;">Experience authentic Korean culture with our premium blends and traditional recipes.</p>
+                    <div class="social-links mt-3">
+                        <a href="https://www.facebook.com/daltokkisfoodhub"><i class="fab fa-facebook"></i></a> 
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 style="margin-bottom: 1rem;">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#home">Home</a></li>
+                        <li class="mb-2"><a href="#about">About</a></li>
+                        <li class="mb-2"><a href="#menu">Menu</a></li>
+                        <li class="mb-2"><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 style="margin-bottom: 1rem;">Contact Info</h5>
+                    <p style="opacity: 0.7;"><i class="fas fa-map-marker-alt me-2"></i>Dela Costa Homes V<br><span style="margin-left: 1.5rem;">Montalban, Rizal</span></p>
+                    <p style="opacity: 0.7;"><a href="https://www.facebook.com/daltokkisfoodhub"><i class="fab fa-facebook"></i>Facebook</a> </p>
+                    <p style="opacity: 0.7;"><i class="fas fa-envelope me-2"></i>info@daltokki.com</p>
+                </div>
+            </div>
+            <hr style="border-color: #333; margin: 2rem 0;">
+            <div class="text-center">
+                <p style="opacity: 0.7;">&copy; 2024 Dal Tokki Cafe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // APK Download Handler
+        document.getElementById('downloadAPKBtn').addEventListener('click', function(e) {
+            console.log('APK download initiated');
+        });
+
+        // Slideshow functionality
+        let slideIndex = 0;
+        showSlides();
+
+        function showSlides() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slideIndex++;
+            if (slideIndex > slides.length) slideIndex = 1;
+            
+            slides[slideIndex - 1].classList.add('active');
+            dots[slideIndex - 1].classList.add('active');
+            
+            setTimeout(showSlides, 3000);
+        }
+
+        function currentSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slideIndex = n;
+            slides[n].classList.add('active');
+            dots[n].classList.add('active');
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 70;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Mobile menu close
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navbarCollapse.classList.contains('show')) {
+                    navbarToggler.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
