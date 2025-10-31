@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeMenu();
     updateCartDisplay();
     setupEventListeners();
+    initCategoryStrip();
 });
 
 function initializeMenu() {
@@ -27,6 +28,59 @@ function initializeMenu() {
     }
 }
 
+// Build slidable category strip from existing select options
+function initCategoryStrip() {
+    const select = document.getElementById('categoryFilter');
+    if (!select) return;
+
+    // Create strip container
+    const stripWrapper = document.createElement('div');
+    stripWrapper.className = 'category-strip-wrapper';
+    stripWrapper.innerHTML = `
+        <button class="strip-nav left" aria-label="scroll left"><i class="fas fa-chevron-left"></i></button>
+        <div class="category-strip" id="categoryStrip"></div>
+        <button class="strip-nav right" aria-label="scroll right"><i class="fas fa-chevron-right"></i></button>
+    `;
+
+    // Insert before the select
+    const parentRow = select.closest('.row') || select.parentElement;
+    if (parentRow && parentRow.parentElement) {
+        parentRow.parentElement.insertBefore(stripWrapper, parentRow);
+    }
+
+    const strip = stripWrapper.querySelector('#categoryStrip');
+    // Add "All" chip
+    const allChip = document.createElement('button');
+    allChip.className = 'category-chip' + (select.value === '' ? ' active' : '');
+    allChip.textContent = 'All';
+    allChip.onclick = () => { window.location.href = 'menu.php'; };
+    strip.appendChild(allChip);
+
+    // Create chips from options
+    Array.from(select.options).forEach(opt => {
+        if (!opt.value) return;
+        const chip = document.createElement('button');
+        chip.className = 'category-chip' + (select.value === opt.value ? ' active' : '');
+        chip.textContent = opt.textContent;
+        chip.onclick = () => { window.location.href = `menu.php?category=${opt.value}`; };
+        strip.appendChild(chip);
+    });
+
+    // Scroll handlers
+    const leftBtn = stripWrapper.querySelector('.strip-nav.left');
+    const rightBtn = stripWrapper.querySelector('.strip-nav.right');
+    leftBtn.onclick = () => strip.scrollBy({ left: -200, behavior: 'smooth' });
+    rightBtn.onclick = () => strip.scrollBy({ left: 200, behavior: 'smooth' });
+
+    // Wheel scroll support
+    strip.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            e.preventDefault();
+            strip.scrollLeft += e.deltaY;
+        }
+    }, { passive: false });
+}
+
 function setupEventListeners() {
     // Theme toggle
     const themeToggle = document.getElementById('themeToggle');
@@ -44,12 +98,27 @@ function searchMenu() {
     }
 }
 
-function filterByCategory() {
-    const categoryId = document.getElementById('categoryFilter').value;
+function filterByCategory(categoryId = null) {
+    if (categoryId === null) {
+        categoryId = document.getElementById('categoryFilter').value;
+    }
+    
     if (categoryId) {
         window.location.href = `menu.php?category=${categoryId}`;
     } else {
         window.location.href = 'menu.php';
+    }
+}
+
+function scrollCategories(direction) {
+    const strip = document.getElementById('categoryStrip');
+    if (strip) {
+        const scrollAmount = 200;
+        if (direction === 'left') {
+            strip.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        } else {
+            strip.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
     }
 }
 
