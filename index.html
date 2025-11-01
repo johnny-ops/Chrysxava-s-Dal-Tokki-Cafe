@@ -839,7 +839,7 @@
                     </div>
                     
                     <div class="mt-4">
-                        <a href="daltokki app.apk" download="DAL_TOKKI_CAFE.apk" class="btn btn-primary me-3 mb-2" id="downloadAPKBtn">
+                        <a href="daltokki.apk" download="DAL_TOKKI_CAFE.apk" class="btn btn-primary me-3 mb-2" id="downloadAPKBtn">
                             <i class="fab fa-android"></i> Download Now
                         </a>
                         <a href="#" class="btn btn-outline-light mb-2" onclick="event.preventDefault(); alert('iOS version coming soon!');">
@@ -1120,13 +1120,44 @@
                     categoryItems.forEach(item => {
                         const row = document.createElement('div');
                         row.className = 'menu-item';
+                        
+                        // Check if item has sizes (Coffee/Non-Coffee)
+                        const hasSizes = item.sizes && Object.keys(item.sizes).length > 0;
+                        const categoryLower = (item.category || '').toLowerCase();
+                        const isCoffeeOrNonCoffee = categoryLower === 'coffee' || categoryLower === 'non-coffee';
+                        
+                        let priceDisplay = '';
+                        let sizesDisplay = '';
+                        let addonsDisplay = '';
+                        
+                        if (hasSizes) {
+                            // Display size prices
+                            const sizeOptions = [];
+                            if (item.sizes.small) sizeOptions.push(`12oz - ₱${Number(item.sizes.small.price || 0).toFixed(2)}`);
+                            if (item.sizes.medium) sizeOptions.push(`16oz - ₱${Number(item.sizes.medium.price || 0).toFixed(2)}`);
+                            if (item.sizes.large) sizeOptions.push(`22oz - ₱${Number(item.sizes.large.price || 0).toFixed(2)}`);
+                            
+                            sizesDisplay = `<div class="mt-1"><small style="color: #666;">Sizes: ${sizeOptions.join(', ')}</small></div>`;
+                            priceDisplay = '<span class="item-price" style="color: #666; font-size: 0.85rem;">Multiple sizes</span>';
+                        } else {
+                            priceDisplay = `<span class="item-price">₱${Number(item.price || 0).toFixed(2)}</span>`;
+                        }
+                        
+                        // Display available add-ons for Coffee/Non-Coffee
+                        if (isCoffeeOrNonCoffee && item.availableAddons && item.availableAddons.length > 0) {
+                            const addonNames = item.availableAddons.map(a => a.name).join(', ');
+                            addonsDisplay = `<div class="mt-1"><small style="color: #888; font-style: italic;">Add-ons available: ${addonNames}</small></div>`;
+                        }
+                        
                         row.innerHTML = `
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="item-info">
                                     <h6>${item.name}</h6>
                                     <p class="item-description">${item.description || ''}</p>
+                                    ${sizesDisplay}
+                                    ${addonsDisplay}
                                 </div>
-                                <span class="item-price">₱${Number(item.price).toFixed(2)}</span>
+                                ${priceDisplay}
                             </div>
                             <div class="mt-2 text-end">
                                 ${item.stock > 0 ? `
