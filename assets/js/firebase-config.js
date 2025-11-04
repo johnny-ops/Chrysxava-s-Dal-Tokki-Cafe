@@ -3,15 +3,15 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, getDocs, onSnapshot, doc, addDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-// Firebase config - Same as mobile app
+// Firebase config - Unified with admin and mobile (new project)
 const firebaseConfig = {
-  apiKey: "AIzaSyDIu5hhLqjAERyeU1on-3H3KT0DzsNFNuw",
-  authDomain: "daltokki-828fa.firebaseapp.com",
-  projectId: "daltokki-828fa",
-  storageBucket: "daltokki-828fa.firebasestorage.app",
-  messagingSenderId: "722840974541",
-  appId: "1:722840974541:web:3b408b8f3ebd1c97d9e584",
-  measurementId: "G-NZ77WHMTQG"
+  apiKey: "AIzaSyDDUmrgvsO0e-6V8we3mpFqG-R68BMMefM",
+  authDomain: "daltokki-main.firebaseapp.com",
+  projectId: "daltokki-main",
+  storageBucket: "daltokki-main.firebasestorage.app",
+  messagingSenderId: "43238704811",
+  appId: "1:43238704811:web:9e09eceac52990335659ee",
+  measurementId: "G-VM0FHE5S32"
 };
 
 // Initialize Firebase
