@@ -1,3 +1,10 @@
+// ==========================================
+// FIREBASE CONFIGURATION - COMMENTED OUT (MIGRATED TO SUPABASE)
+// ==========================================
+// This file has been replaced by supabase-config.js
+// Firebase code is commented out but preserved for reference
+
+/*
 // Firebase Configuration for Website
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, collection, getDocs, onSnapshot, doc, addDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -30,3 +37,7 @@ signInAnonymously(auth)
 
 // Export Firebase functions
 export { db, auth, collection, getDocs, onSnapshot, doc, addDoc, updateDoc, deleteDoc };
+*/
+
+// Re-export Supabase for backward compatibility
+export { supabase as db, supabase as auth } from './supabase-config.js';

@@ -44,6 +44,15 @@
             background: var(--bg-primary);
             transition: background 0.3s ease, color 0.3s ease;
         }
+        .variant-price-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .variant-line {
+            font-size: 0.85rem;
+            color: #444;
+        }
 
         /* Navigation */
         .navbar {
@@ -839,7 +848,7 @@
                     </div>
                     
                     <div class="mt-4">
-                        <a href="tokki app .apk" download="DAL_TOKKI_CAFE.apk" class="btn btn-primary me-3 mb-2" id="downloadAPKBtn">
+                        <a href="Daltokki-Cafe.apk" download="DAL_TOKKI_CAFE.apk" class="btn btn-primary me-3 mb-2" id="downloadAPKBtn">
                             <i class="fab fa-android"></i> Download Now
                         </a>
                         <a href="#" class="btn btn-outline-light mb-2" onclick="event.preventDefault(); alert('iOS version coming soon!');">
@@ -927,6 +936,57 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Security: Disable right-click, view source, and developer tools
+        (function() {
+            'use strict';
+            
+            // Disable right-click context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            }, false);
+            
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.keyCode === 123) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+I (DevTools)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+J (Console)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+U (View Source)
+                if (e.ctrlKey && e.keyCode === 85) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+S (Save Page)
+                if (e.ctrlKey && e.keyCode === 83) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Disable text selection (optional - can be removed if needed)
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Clear console on page load
+            if (typeof console !== 'undefined') {
+                console.clear();
+            }
+        })();
+        
           // Theme Toggle Functionality
           const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
@@ -1050,9 +1110,22 @@
 
 
     </script>
+    
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        // Make Supabase available globally
+        window.supabaseLib = supabase;
+    </script>
+    
     <script type="module">
-        import './assets/js/firebase-config.js';
-        import firebaseMenuService from './assets/js/firebase-menu.js';
+        // Firebase imports - COMMENTED OUT (MIGRATED TO SUPABASE)
+        // import './assets/js/firebase-config.js';
+        // import firebaseMenuService from './assets/js/firebase-menu.js';
+        
+        // Supabase imports
+        import './assets/js/supabase-config.js';
+        import supabaseMenuService from './assets/js/supabase-menu.js';
 
         function renderMenu(categories, items) {
             const container = document.getElementById('menuContent');
@@ -1067,6 +1140,51 @@
                 }
                 itemsByCategory[categoryName].push(item);
             });
+
+            const sizeLabelMap = { small: '12oz', medium: '16oz', large: '22oz' };
+            const formatCurrency = (value) => `₱${Number(value || 0).toFixed(2)}`;
+
+            const normalizeVariantEntries = (priceMap) => {
+                if (!priceMap || typeof priceMap !== 'object') return [];
+                return Object.entries(priceMap).map(([sizeKey, entry]) => {
+                    const price = Number(entry?.price ?? entry);
+                    if (!Number.isFinite(price) || price <= 0) return null;
+                    return {
+                        size: sizeKey,
+                        label: entry?.label || sizeLabelMap[sizeKey] || sizeKey,
+                        price
+                    };
+                }).filter(Boolean);
+            };
+
+            const buildVariantCard = (label, priceMap) => {
+                const entries = normalizeVariantEntries(priceMap);
+                if (!entries.length) return '';
+                const min = Math.min(...entries.map(e => e.price));
+                const max = Math.max(...entries.map(e => e.price));
+                const range = min === max ? formatCurrency(min) : `${formatCurrency(min)} - ${formatCurrency(max)}`;
+                const listItems = entries.map(entry => `<li><span>${entry.label}</span><strong>${formatCurrency(entry.price)}</strong></li>`).join('');
+                return `
+                    <div class="variant-card ${label === 'Hot' ? 'hot' : 'iced'}">
+                        <div class="variant-card-head">
+                            <span class="temp-pill ${label === 'Hot' ? 'hot' : 'iced'}">${label}</span>
+                            <span class="variant-range">${range}</span>
+                        </div>
+                        <ul class="variant-size-list">
+                            ${listItems}
+                        </ul>
+                    </div>
+                `;
+            };
+
+            const buildTemperatureBadges = (item) => {
+                const hasHot = item.hot_prices && Object.keys(item.hot_prices).length > 0;
+                const hasIced = item.iced_prices && Object.keys(item.iced_prices).length > 0;
+                const badges = [];
+                if (hasHot) badges.push('<span class="temp-pill hot">Hot</span>');
+                if (hasIced) badges.push('<span class="temp-pill iced">Iced</span>');
+                return badges.length ? `<div class="temp-pill-group">${badges.join('')}</div>` : '';
+            };
 
             container.innerHTML = `
                 <div class="category-strip-wrapper">
@@ -1134,49 +1252,105 @@
                         const row = document.createElement('div');
                         row.className = 'menu-item';
                         
-                        // Check if item has sizes (Coffee/Non-Coffee)
+                        // Check if item has sizes (Coffee/Non-Coffee or Meals)
                         const hasSizes = item.sizes && Object.keys(item.sizes).length > 0;
                         const categoryLower = (item.category || '').toLowerCase();
                         const isCoffeeOrNonCoffee = categoryLower === 'coffee' || categoryLower === 'non-coffee';
-                        const drinkType = (item.drinkType || '').toLowerCase();
+                        const hasMealsKeyword = categoryLower.includes('meals') || categoryLower.includes('meal');
+                        const isMealsCategory = hasMealsKeyword || categoryLower === 'meals' || categoryLower === 'meal';
+                        const drinkType = (item.drink_type || item.drinkType || '').toLowerCase();
                         
                         let priceDisplay = '';
                         let sizesDisplay = '';
                         let addonsDisplay = '';
-                        let tempBadge = '';
-                        if (isCoffeeOrNonCoffee && (drinkType === 'hot' || drinkType === 'iced')) {
-                            tempBadge = `<span class="badge bg-dark me-2" style="font-size: 0.65rem;">${drinkType === 'hot' ? 'Hot' : 'Iced'}</span>`;
-                        }
+                        const badgesHtml = buildTemperatureBadges(item);
+                        const hotVariantCard = buildVariantCard('Hot', item.hot_prices);
+                        const icedVariantCard = buildVariantCard('Iced', item.iced_prices);
                         
-                        if (hasSizes) {
-                            // Display size prices
+                        const variantLine = (prices, label) => {
+                            if (!prices || typeof prices !== 'object') return '';
+                            const values = Object.values(prices)
+                                .map(entry => Number(entry?.price ?? entry))
+                                .filter(value => !Number.isNaN(value) && value > 0)
+                                .sort((a, b) => a - b);
+                            if (!values.length) return '';
+                            return `<div class="variant-line"><span class="badge bg-dark me-1" style="font-size:0.65rem;">${label}</span>₱${values[0].toFixed(2)}</div>`;
+                        };
+                        const hotVariant = variantLine(item.hot_prices, 'Hot');
+                        const icedVariant = variantLine(item.iced_prices, 'Iced');
+                        
+                        if (hotVariantCard || icedVariantCard) {
+                            priceDisplay = `<div class="variant-summary-inline">${hotVariantCard}${icedVariantCard}</div>`;
+                        } else if (hotVariant || icedVariant) {
+                            priceDisplay = `<div class="variant-price-stack">${hotVariant}${icedVariant}</div>`;
+                        } else if (hasSizes || isMealsCategory) {
+                            // Display size prices for drinks or meals
                             const sizeOptions = [];
-                            if (item.sizes.small) sizeOptions.push(`12oz - ₱${Number(item.sizes.small.price || 0).toFixed(2)}`);
-                            if (item.sizes.medium) sizeOptions.push(`16oz - ₱${Number(item.sizes.medium.price || 0).toFixed(2)}`);
-                            if (item.sizes.large) sizeOptions.push(`22oz - ₱${Number(item.sizes.large.price || 0).toFixed(2)}`);
+                            if (item.sizes?.small) {
+                                const smallPrice = Number(item.sizes.small.price || item.sizes.small || 0);
+                                if (smallPrice > 0) {
+                                    sizeOptions.push(`Small - ₱${smallPrice.toFixed(2)}`);
+                                }
+                            }
+                            if (item.sizes?.medium) {
+                                const mediumPrice = Number(item.sizes.medium.price || item.sizes.medium || 0);
+                                if (mediumPrice > 0) {
+                                    sizeOptions.push(`Medium - ₱${mediumPrice.toFixed(2)}`);
+                                }
+                            }
+                            if (item.sizes?.large) {
+                                const largePrice = Number(item.sizes.large.price || item.sizes.large || 0);
+                                if (largePrice > 0) {
+                                    sizeOptions.push(`Large - ₱${largePrice.toFixed(2)}`);
+                                }
+                            }
                             
-                            sizesDisplay = `<div class="mt-1"><small style="color: #666;">Sizes: ${sizeOptions.join(', ')}</small></div>`;
-                            priceDisplay = '<span class="item-price" style="color: #666; font-size: 0.85rem;">Multiple sizes</span>';
+                            if (sizeOptions.length > 0) {
+                                sizesDisplay = `<div class="mt-1"><small style="color: #666;">Sizes: ${sizeOptions.join(', ')}</small></div>`;
+                                priceDisplay = '<span class="item-price" style="color: #666; font-size: 0.85rem;">Multiple sizes</span>';
+                            } else if (isMealsCategory && item.price) {
+                                // Fallback to single price if no sizes defined
+                                priceDisplay = `<span class="item-price">₱${Number(item.price || 0).toFixed(2)}</span>`;
+                            } else {
+                                priceDisplay = '<span class="item-price" style="color: #666; font-size: 0.85rem;">Multiple sizes</span>';
+                            }
                         } else {
-                            // If HOT drink and only 12oz is available, show single price (no range)
                             priceDisplay = `<span class="item-price">₱${Number(item.price || 0).toFixed(2)}</span>`;
                         }
                         
                         // Display available add-ons for Coffee/Non-Coffee
-                        if (isCoffeeOrNonCoffee && item.availableAddons && item.availableAddons.length > 0) {
-                            const addonNames = item.availableAddons.map(a => a.name).join(', ');
+                        const availableAddons = item.available_addons || item.availableAddons;
+                        if (isCoffeeOrNonCoffee && availableAddons && availableAddons.length > 0) {
+                            const addonNames = availableAddons.map(a => a.name).join(', ');
                             addonsDisplay = `<div class="mt-1"><small style="color: #888; font-style: italic;">Add-ons available: ${addonNames}</small></div>`;
                         }
                         
+                        // Image carousel for items with images
+                        let imageCarousel = '';
+                        const imageUrl = item.image_url || item.imageUrl;
+                        if (imageUrl) {
+                            imageCarousel = `
+                                <div class="menu-item-image-carousel mb-2">
+                                    <img src="${imageUrl}" alt="${item.name}" class="menu-item-image" 
+                                         style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; cursor: pointer;"
+                                         onclick="openImageModal('${imageUrl}', '${item.name}')">
+                                </div>
+                            `;
+                        }
+                        
                         row.innerHTML = `
-                            <div class="d-flex justify-content-between align-items-start">
+                            ${imageCarousel}
+                            <div class="d-flex justify-content-between align-items-start flex-column flex-md-row gap-3">
                                 <div class="item-info">
-                                    <h6>${tempBadge}${item.name}</h6>
+                                    ${badgesHtml}
+                                    <h6>${item.name}</h6>
                                     <p class="item-description">${item.description || ''}</p>
                                     ${sizesDisplay}
                                     ${addonsDisplay}
                                 </div>
-                                ${priceDisplay}
+                                <div class="menu-price-display">
+                                    ${priceDisplay}
+                                </div>
                             </div>
                             <div class="mt-2 text-end">
                                 ${item.stock > 0 ? `
@@ -1225,16 +1399,46 @@
             buildCards('all');
         }
 
+        // Image modal for full-size view
+        window.openImageModal = function(imageUrl, itemName) {
+            const modal = document.createElement('div');
+            modal.className = 'image-modal';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; cursor: pointer;';
+            modal.onclick = () => modal.remove();
+            modal.innerHTML = `
+                <div style="position: relative; max-width: 90%; max-height: 90%;">
+                    <img src="${imageUrl}" alt="${itemName}" style="max-width: 100%; max-height: 100%; border-radius: 8px;">
+                    <button onclick="this.closest('.image-modal').remove()" 
+                            style="position: absolute; top: -40px; right: 0; background: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 18px;">&times;</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
-            const data = await firebaseMenuService.initializeMenu();
-            renderMenu(data.categories, data.items);
-            firebaseMenuService.setupRealtimeListeners();
-            firebaseMenuService.addListener((type) => {
+            try {
+                // Use Supabase menu service instead of Firebase
+                const data = await supabaseMenuService.initializeMenu();
+                console.log('Menu data received:', data);
+                renderMenu(data.categories || [], data.items || []);
+                
+                // Set up realtime listeners (non-blocking)
+                try {
+                    supabaseMenuService.setupRealtimeListeners();
+                } catch (realtimeError) {
+                    console.warn('Realtime listeners failed (non-critical):', realtimeError);
+                }
+                
+                supabaseMenuService.addListener((type) => {
                 if (type === 'items' || type === 'categories') {
-                    renderMenu(firebaseMenuService.getCategories(), firebaseMenuService.getMenuItems());
+                        renderMenu(supabaseMenuService.getCategories(), supabaseMenuService.getMenuItems());
                 }
             });
+            } catch (error) {
+                console.error('Error initializing menu:', error);
+                // Show empty menu instead of crashing
+                renderMenu([], []);
+            }
         });
     </script>
 </body>
-</html>
